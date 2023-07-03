@@ -33,7 +33,7 @@ export class RegisterComponent {
     Validators.maxLength(13)
   ])
 
-  showAlert = false
+  showAlert = true
   alertMsg = 'Please wait! your account is being created.'
   alertColor = 'blue'
 
@@ -46,9 +46,19 @@ export class RegisterComponent {
     phoneNumber: this.phoneNumber
   })
 
+  
+
+  formSubmitted = false;
+
   register() {
-    this.showAlert = true
-    this.alertMsg = 'Please wait! your account is being created.'
-    this.alertColor = 'blue'
+  // Submit the form and set formSubmitted to true upon success
+  if (this.registerForm.valid) {
+    // Your code to submit the form
+
+    this.formSubmitted = true;
+    // You can also reset the form if needed
+    // this.registerForm.reset();
   }
+}
+
 }
