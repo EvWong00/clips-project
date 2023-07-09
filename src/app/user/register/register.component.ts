@@ -42,7 +42,7 @@ export class RegisterComponent {
   ]);
 
   showAlert = false;
-  alertMsg = 'Please wait! your account is being created.';
+  alertMessage = 'Please wait! your account is being created.';
   alertColor = 'blue';
 
   registerForm = new FormGroup({
@@ -61,17 +61,17 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.formSubmitted = true;
       this.showAlert = true;
-      this.alertMsg = 'Please wait! Your account is being created.';
+      this.alertMessage = 'Please wait! Your account is being created.';
       this.alertColor = 'blue';
       this.inSubmission = true;
       
       try {
         await this.auth.createUser(this.registerForm.value as IUser);
-        this.alertMsg = 'Success! Your account has been created.';
+        this.alertMessage = 'Success! Your account has been created.';
         this.alertColor = 'green';
       } catch(e) {
         console.error(e);
-        this.alertMsg = 'An unexpected error occurred. Please try again later.';
+        this.alertMessage = 'An unexpected error occurred. Please try again later.';
         this.alertColor = 'red';
       } finally {
         this.inSubmission = false;
