@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-register',
@@ -8,9 +9,12 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  constructor(private auth: AngularFireAuth) {}
+  constructor(
+    private auth: AngularFireAuth,
+    private db: AngularFirestore
+    ) {}
 
-  inSubmission = false
+  inSubmission = false;
 
   name = new FormControl('', [
     Validators.required,
@@ -38,9 +42,9 @@ export class RegisterComponent {
     Validators.maxLength(13)
   ])
 
-  showAlert = true
-  alertMsg = 'Please wait! your account is being created.'
-  alertColor = 'blue'
+  showAlert = false;
+  alertMsg = 'Please wait! your account is being created.';
+  alertColor = 'blue';
 
   registerForm = new FormGroup({
     name: this.name,
@@ -66,24 +70,35 @@ export class RegisterComponent {
 
     this.inSubmission = true
 
+    this.showAlert = true;
+
+    this.alertMsg = 'Please wait! Your account is being created.';
+
+    this.alertColor = 'blue';
+
     const { email, password } = this.registerForm.value
     
     try {
     const userCred = await this.auth.createUserWithEmailAndPassword(
       email as string, password as string
       )
-      console.log(userCred)
+      await this.db.collection('users').add({
+        name: this.name.value,
+        email: this.email.value,
+        age: this.age.value,
+        phoneNumber: this.phoneNumber.value
+      })
     } catch(e) {
       console.error(e)
 
-      this.alertMsg = 'An unexpected error occurred. Please try again later.'
-      this.alertColor = "red"
-      this.inSubmission = false
-      return
+      this.alertMsg = 'An unexpected error occurred. Please try again later.';
+      this.alertColor = "red";
+      this.inSubmission = false;
+      return;
     }
 
-    this.alertMsg = 'Success! your account has been created.'
-    this.alertColor = "green"
+    this.alertMsg = 'Success! Your account has been created.';
+    this.alertColor = "green";
   }
 }
 
