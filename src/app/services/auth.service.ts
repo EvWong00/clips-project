@@ -2,21 +2,19 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import IUser from '../models/user.model';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { delay, map, filter, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-import { NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { ActivatedRoute, NavigationEnd } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private usersCollection: AngularFirestoreCollection<IUser>
+  public usersCollection: AngularFirestoreCollection<IUser>
   public isAuthenticated$: Observable<boolean>
   public isAuthenticatedWithDelay$: Observable<boolean>
+  private redirect = false
 
   constructor(
     private auth: AngularFireAuth,
@@ -27,13 +25,18 @@ export class AuthService {
     this.usersCollection = db.collection('users')
     this.isAuthenticated$ = auth.user.pipe(
       map(user =>!!user)
+  
     )
     this.isAuthenticatedWithDelay$ = this.isAuthenticated$.pipe(
       delay(1000)
     )
     this.router.events.pipe(
-      filter(e => e instanceof NavigationEnd)
-    ).subscribe(console.log)
+      filter(e => e instanceof NavigationEnd),
+      map(e => this.route.firstChild),
+      switchMap(route => route?.data ?? of({ authOnly: false }))
+    ).subscribe(data => {
+      this.redirect = data.authOnly ?? false
+    })
    }
 
   public async createUser(userData: IUser) {
@@ -49,12 +52,7 @@ export class AuthService {
         throw new Error("User can't be found")
       }
 
-    await this.usersCollection.doc(userCred.user?.uid).set({
-      name: userData.name,
-      email: userData.email,
-      age: userData.age,
-      phoneNumber: userData.phoneNumber
-    });
+    
 
     await userCred.user.updateProfile({
       displayName: userData.name
@@ -68,7 +66,9 @@ export class AuthService {
 
     await this.auth.signOut()
 
-    await this.router.navigateByUrl('/')
+    if(this.redirect) {
+      await this.router.navigateByUrl('/')
+    }
   }
 
 }
