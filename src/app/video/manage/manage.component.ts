@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
 
 
@@ -8,25 +7,11 @@ import { Router } from '@angular/router';
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.css']
 })
-export class ManageComponent {
-  videoOrder: string = '';
-  clips: any[] = [];
+export class ManageComponent implements OnInit{
   
-  openModal(event: Event, clip: any) {
-    // Implementation of the openModal method
-  }
+  constructor() { }
 
-  deleteClip(event: Event, clip: any) {
-    // Implementation of the deleteClip method
-  }
-
-  constructor(private router: Router) {}
-
-  sort(event: any) {
-    // Sorting logic
-  }
-
-  copyToClipboard(event: Event, docID: string) {
-    // Copy logic
+  ngOnInit(): void {
+      
   }
 }
