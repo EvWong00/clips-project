@@ -12,8 +12,8 @@ export class RegisterValidators {
             }
 
             const error = control.value === matchingControl.value ? 
-            null :
-            { noMatch: true }
+                null :
+                { noMatch: true }
 
             matchingControl.setErrors(error)
 
