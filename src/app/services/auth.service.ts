@@ -7,6 +7,8 @@ import { map } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,9 @@ export class AuthService {
     this.isAuthenticatedWithDelay$ = this.isAuthenticated$.pipe(
       delay(1000)
     )
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(console.log)
    }
 
   public async createUser(userData: IUser) {
