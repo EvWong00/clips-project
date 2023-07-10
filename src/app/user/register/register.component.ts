@@ -53,7 +53,7 @@ export class RegisterComponent {
     password: this.password,
     confirm_password: this.confirm_password,
     phoneNumber: this.phoneNumber
-  }, [RegisterValidators.match]);
+  }, [RegisterValidators.match('password', 'confirm_password')]);
 
   formSubmitted = false;
 
