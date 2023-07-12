@@ -6,6 +6,7 @@ import { ManageComponent } from './manage/manage.component'
 import { FormsModule } from '@angular/forms';
 import { UploadComponent } from './upload/upload.component';
 import { SharedModule } from '../shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     VideoRoutingModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ]
 })
 export class VideoModule { }
