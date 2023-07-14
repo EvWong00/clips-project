@@ -4,8 +4,11 @@ import {
 import IClip from '../models/clip.model';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { switchMap, map } from 'rxjs';
-import { of } from 'rxjs';
+import { of, BehaviorSubject, combineLatest } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import 'firebase/compat/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -22,25 +25,37 @@ export class ClipService {
   }
 
    createClip(data: IClip) : Promise<DocumentReference<IClip>> {
+    const clipWithTimestamp = {
+      ...data,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    
     return  this.clipsCollection.add(data)
   }
 
-  getUserClips() {
-    return this.auth.user.pipe(
-      switchMap(user => {
+  getUserClips(sort$: BehaviorSubject<string>) {
+    return combineLatest([this.auth.user, sort$]).pipe(
+      switchMap(values => {
+        const[user, sort] = values;
         if(!user) {
-          return of([])
+          return of([]);
         }
-
         const query = this.clipsCollection.ref.where(
-          'uid', '==', user.uid
+          'uid',
+          '==',
+          user.uid
+        ).orderBy(
+          'timestamp',
+          sort === '1' ? 'desc' : 'asc'
         )
 
-        return query.get()
+        return query.get();
       }),
       map(snapshot => (snapshot as QuerySnapshot<IClip>).docs)
     )
   }
+  
+  
 
   updateClip(id: string, title: string) {
     return this.clipsCollection.doc(id).update({
