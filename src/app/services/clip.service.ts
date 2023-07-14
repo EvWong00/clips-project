@@ -6,7 +6,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { switchMap, map } from 'rxjs';
 import { of, BehaviorSubject, combineLatest } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 
@@ -24,13 +23,8 @@ export class ClipService {
     this.clipsCollection = db.collection('clips')
   }
 
-   createClip(data: IClip) : Promise<DocumentReference<IClip>> {
-    const clipWithTimestamp = {
-      ...data,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    
-    return  this.clipsCollection.add(data)
+  async createClip(data: IClip): Promise<DocumentReference<IClip>> {
+    return await this.clipsCollection.add(data);
   }
 
   getUserClips(sort$: BehaviorSubject<string>) {
@@ -55,8 +49,6 @@ export class ClipService {
     )
   }
   
-  
-
   updateClip(id: string, title: string) {
     return this.clipsCollection.doc(id).update({
       title
