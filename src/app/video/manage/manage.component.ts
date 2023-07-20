@@ -29,9 +29,6 @@ export class ManageComponent implements OnInit{
       this.route.queryParams.subscribe((params: Params) => { 
         this.videoOrder = params['sort'] == '2' ? params['sort'] : '1'
         this.sort$.next(this.videoOrder)
-        console.log(this.sort$.value)
-        console.log(this.videoOrder)
-        console.log(typeof params['sort'], params['sort']);
       })
       this.clipService.getUserClips(this.sort$).subscribe(docs => {
         this.clips = []
