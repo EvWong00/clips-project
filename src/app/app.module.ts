@@ -16,6 +16,7 @@ import { ClipComponent } from './clip/clip.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { initializeApp } from 'firebase/app';
+import { ClipsListComponent } from './clips-list/clips-list.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { initializeApp } from 'firebase/app';
     AboutComponent,
     ClipComponent,
     NotFoundComponent,
+    ClipsListComponent,
     
   ],
   imports: [
