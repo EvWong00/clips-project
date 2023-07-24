@@ -16,7 +16,6 @@ export class ClipComponent implements OnInit {
   constructor(public route: ActivatedRoute) { }
 
   ngOnInit(): void {
-      this.player = videojs(this.target?.nativeElement)
       this.route.params.subscribe((params: Params) => {
         this.id = params['id']
       })
