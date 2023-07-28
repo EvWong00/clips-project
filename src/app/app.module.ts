@@ -29,7 +29,6 @@ import { FbTimestampPipe } from './pipes/fb-timestamp.pipe';
     NotFoundComponent,
     ClipsListComponent,
     FbTimestampPipe,
-    
   ],
   imports: [
     BrowserModule,
